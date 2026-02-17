@@ -20,6 +20,7 @@ public class Labirinto {
     private int xEntrata;
     private int yEntrata;
     private int[][] mappa;
+    private ArrayList<Incrocio> listaIncroci = new ArrayList<>();
     /**
      * costruttore di labirinto
      */
@@ -88,6 +89,41 @@ public class Labirinto {
             this.mappa[start_x][start_y] = 3; // punto partenza player
         }
         
+        Random rnd = new Random();
+        
+        int numeroOggetti = n / 2; 
+        int contatore = 0;
+        int tentativi = 0; // Protezione anti-loop infinito
+
+        // Aumentiamo i tentativi perché è più difficile trovare spazio con questa regola
+        while (contatore < numeroOggetti && tentativi < 10000) {
+            
+            // Coordinate casuali (escludendo i bordi estremi)
+            int r = rnd.nextInt(n - 2) + 1; 
+            int c = rnd.nextInt(n - 2) + 1;
+
+            // 1. La cella deve essere vuota (0)
+            if (this.mappa[r][c] == 0) {
+                
+                // 2. CONTROLLO DI VICINANZA
+                // Verifichiamo che SOPRA, SOTTO, DESTRA e SINISTRA non ci sia già un 4
+                boolean toccaAltroOggetto = false;
+
+                if (this.mappa[r - 1][c] == 4) toccaAltroOggetto = true; // Nord
+                if (this.mappa[r + 1][c] == 4) toccaAltroOggetto = true; // Sud
+                if (this.mappa[r][c - 1] == 4) toccaAltroOggetto = true; // Ovest
+                if (this.mappa[r][c + 1] == 4) toccaAltroOggetto = true; // Est
+
+                // Se NON tocca nessun altro oggetto, posizionalo
+                if (!toccaAltroOggetto) {
+                    this.mappa[r][c] = 4;
+                    contatore++;
+                }
+            }
+            tentativi++;
+        }
+        
+        generaIncroci();
 
         return this.mappa;
     }
@@ -227,10 +263,39 @@ public class Labirinto {
         return mappa;
     }
     
-    
+    public void generaIncroci() {
+        listaIncroci.clear(); // Pulisci vecchi incroci
+        int n = this.mappa.length;
+        
+        for (int i = 1; i < n - 1; i++) {
+            for (int j = 1; j < n - 1; j++) {
+                // Se non è un muro
+                if (this.mappa[i][j] != 1) {
+                    int strade = 0;
+                    if (this.mappa[i - 1][j] != 1) strade++;
+                    if (this.mappa[i + 1][j] != 1) strade++;
+                    if (this.mappa[i][j - 1] != 1) strade++;
+                    if (this.mappa[i][j + 1] != 1) strade++;
+                    
+                    // Se è un incrocio (più di 2 vie) e NON è la posizione del player
+                    if (strade > 2 && this.mappa[i][j] != 3) {
+                        this.mappa[i][j] = 5; // Segna graficamente
+                        listaIncroci.add(new Incrocio(i, j, this.mappa));
+                    }
+                }
+            }
+        }
+    }
   
 
-    
+    public Incrocio getIncrocio(int x, int y) {
+        for (Incrocio inc : listaIncroci) {
+            if (inc.getX() == x && inc.getY() == y) {
+                return inc;
+            }
+        }
+        return null;
+    }
     
     
 }

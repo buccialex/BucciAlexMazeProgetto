@@ -55,9 +55,23 @@ public class Player extends OggettoMobile{
                 this.x = nextX;
                 this.y = nextY;
                 labirinto.aggiornaPosPlayer(oldX, oldY, nextX, nextY);
-                return;
+                
             }
+            
+            
         }
+  
+    }
+    
+    public boolean terminato(Labirinto labirinto){
+        int misure = labirinto.getMisure();
+        
+        if (misure % 2 == 0) misure++;
+        
+        int uscitaX = misure-1;
+        int uscitaY = misure/2;
+        
+        return this.x == uscitaX && this.y == uscitaY;
     }
         
 }

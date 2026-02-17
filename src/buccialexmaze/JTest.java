@@ -160,6 +160,12 @@ public class JTest extends javax.swing.JFrame {
                         case 3:
                             c.setBackground(Color.RED);
                             break;
+                        case 4:
+                            c.setBackground(Color.YELLOW);
+                            break;
+                        case 5:
+                            c.setBackground(Color.ORANGE);
+                            break;
                         default:
                             c.setBackground(Color.WHITE); 
                             break;
@@ -187,21 +193,30 @@ public class JTest extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGeneraActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-      
-        p.muovi(l);
-        int[][] matriceNuova = l.getMappa();
-        DefaultTableModel model = (DefaultTableModel) tabella.getModel();
+                                            
+    // 1. Esegue UN SOLO passo logico
+    p.muovi(l);
 
-             // 3. Aggiorna il modello della tabella con i nuovi valori
-         for (int i = 0; i < matriceNuova.length; i++) {
-            for (int j = 0; j < matriceNuova[i].length; j++) {
-                // Aggiorna solo se il valore è cambiato per essere più veloce
-                model.setValueAt(matriceNuova[i][j], i, j);
-            }
+    // 2. Sincronizza la grafica con la matrice aggiornata
+    // Recuperiamo il modello e la mappa corrente
+    DefaultTableModel model = (DefaultTableModel) tabella.getModel();
+    int[][] mappaCorrente = l.getMappa();
+    
+    // Aggiorniamo il modello della tabella cella per cella
+    for (int i = 0; i < mappaCorrente.length; i++) {
+        for (int j = 0; j < mappaCorrente[i].length; j++) {
+            model.setValueAt(mappaCorrente[i][j], i, j);
+        }
     }
     
-    // 4. Ora il repaint funzionerà perché i dati nel modello sono nuovi
-    tabella.repaint();
+    // 3. Controlla se con questo passo il giocatore ha vinto
+    if (p.terminato(l)) {
+        // Opzionale: disabilita il tasto così non si può più cliccare
+        jButton2.setEnabled(false); 
+        javax.swing.JOptionPane.showMessageDialog(this, "Hai raggiunto l'uscita!");
+    }
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
