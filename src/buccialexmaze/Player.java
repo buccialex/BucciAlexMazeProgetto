@@ -30,6 +30,7 @@ public class Player extends OggettoMobile{
         if(this.x == 0 && this.y == 0){
             this.x = labirinto.getxEntrata();
             this.y = labirinto.getyEntrata();
+            labirinto.aggiornaPosPlayer(x, y, x, y);
         }
         
         int[][] maze = labirinto.getMappa();
@@ -46,8 +47,14 @@ public class Player extends OggettoMobile{
             
             if (nextX >= 0 && nextX < n && nextY >= 0 && nextY < n && 
                 maze[nextX][nextY] == 2) {
-                x = nextX;
-                y = nextY;
+                
+                int oldX = this.x;
+                int oldY = this.y;
+                
+                
+                this.x = nextX;
+                this.y = nextY;
+                labirinto.aggiornaPosPlayer(oldX, oldY, nextX, nextY);
                 return;
             }
         }

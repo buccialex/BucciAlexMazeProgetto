@@ -71,6 +71,11 @@ public class JTest extends javax.swing.JFrame {
         });
 
         jButton2.setText("Muovi");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -79,7 +84,7 @@ public class JTest extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 637, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2)
                     .addComponent(btnGenera))
@@ -97,7 +102,7 @@ public class JTest extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 649, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -107,8 +112,8 @@ public class JTest extends javax.swing.JFrame {
 
     private void btnGeneraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneraActionPerformed
                                        
-        Labirinto lab = new Labirinto();
-        int[][] matriceInteri = lab.getMappa();
+       
+        int[][] matriceInteri = l.getMappa();
         
         int righe = matriceInteri.length;
         int colonne = matriceInteri[0].length;
@@ -152,6 +157,9 @@ public class JTest extends javax.swing.JFrame {
                         case 2: 
                             c.setBackground(Color.GREEN); 
                             break;
+                        case 3:
+                            c.setBackground(Color.RED);
+                            break;
                         default:
                             c.setBackground(Color.WHITE); 
                             break;
@@ -177,6 +185,24 @@ public class JTest extends javax.swing.JFrame {
         
        
     }//GEN-LAST:event_btnGeneraActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+      
+        p.muovi(l);
+        int[][] matriceNuova = l.getMappa();
+        DefaultTableModel model = (DefaultTableModel) tabella.getModel();
+
+             // 3. Aggiorna il modello della tabella con i nuovi valori
+         for (int i = 0; i < matriceNuova.length; i++) {
+            for (int j = 0; j < matriceNuova[i].length; j++) {
+                // Aggiorna solo se il valore è cambiato per essere più veloce
+                model.setValueAt(matriceNuova[i][j], i, j);
+            }
+    }
+    
+    // 4. Ora il repaint funzionerà perché i dati nel modello sono nuovi
+    tabella.repaint();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -204,6 +230,8 @@ public class JTest extends javax.swing.JFrame {
         
     }
 
+    Labirinto l = new Labirinto();
+    Player p = new Player("franco");
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGenera;
     private javax.swing.JButton jButton2;

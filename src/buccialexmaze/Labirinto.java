@@ -85,7 +85,7 @@ public class Labirinto {
                 x = parent_x[temp_x][y];
                 y = parent_y[temp_x][y];
             }
-            this.mappa[start_x][start_y] = 2; // Marca anche il punto di partenza
+            this.mappa[start_x][start_y] = 3; // punto partenza player
         }
         
 
@@ -180,6 +180,11 @@ public class Labirinto {
             dividiSpazio(maze, top, left, bottom, col - 1);
             dividiSpazio(maze, top, col + 1, bottom, right);
         }
+    }
+    
+    public void aggiornaPosPlayer(int oldX, int oldY, int newX, int newY){
+        this.mappa[oldX][oldY] = 0;
+        this.mappa[newX][newY] = 3;
     }
 
     /**
